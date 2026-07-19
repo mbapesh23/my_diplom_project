@@ -1,0 +1,98 @@
+# Магазин (Shop)
+store: "My Test Shop"
+
+categories:
+  - id: 1
+    name: "Мебель"
+  - id: 2
+    name: "Техника"
+
+parameters:
+  - name: "Материал"
+  - name: "Цвет"
+  - name: "Диагональ"
+
+goods:
+  - id: "abc123"
+    name: "Диван"
+    category: 1
+    model: "LEATHER-X"
+    supplier: "Furniture LLC"
+    price: 15000
+    price_rrc: 18000
+    quantity: 5
+    parameters:
+      material: "Кожа"
+      color: "Коричневый"
+      
+  - id: "def456"
+    name: "Телевизор 4K"
+    category: 2
+    model: "TV-SMART-55"
+    supplier: "TechImport"
+    price: 30000
+    price_rrc: 35000
+    quantity: 3
+    parameters:
+      diagonal: "55\""
+      smart: "да"
+
+users:
+  - username: "diplom_user_1"
+    email: "student@example.com"
+    password: "StrongPass123"
+    first_name: "Алексей"
+    last_name: "Попович"
+    is_staff: false
+
+  - username: "test_buyer"
+    email: "buyer@test.ru"
+    password: "qwerty456"
+    first_name: "Иван"
+    last_name: "Иванов"
+
+contacts:
+  - user: "diplom_user_1" # <--- Связь идет по полю username из блока users выше
+    city: "Москва"
+    street: "Тверская"
+    house: "1"
+    building: ""
+    apartment: "10"
+    phone: "+79990001122"
+    email: "popovich.contact@mail.ru"
+    first_name: "Алексей"
+    last_name: "Попович"
+    
+  - user: "test_buyer"
+    city: "Санкт-Петербург"
+    street: "Невский проспект"
+    house: "10"
+    building: "А"
+    apartment: "5"
+    phone: "+79112223344"
+    email: "ivanov.contact@mail.ru"
+    first_name: "Иван"
+    last_name: "Иванов"
+
+orders:
+  - user: "test_buyer"         
+    contact: "ivanov.contact@mail.ru" 
+    status: "NEW"
+    created_at: "2026-07-11T12:00:00Z"
+    items:
+      - product_info_id: "def456"   
+        quantity: 1
+        price_at_order: 30000      
+        
+      - product_info_id: "abc123"
+        quantity: 2
+        price_at_order: 15000
+
+  - user: "diplom_user_1"
+    contact: "popovich.contact@mail.ru"
+    status: "AWAITING_PAYMENT"
+    created_at: "2026-07-11T13:30:00Z"
+    items:
+      - product_info_id: "def456"
+        quantity: 1
+        price_at_order: 30000
