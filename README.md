@@ -32,25 +32,27 @@ RESTful API сервис для управления каталогом това
 * **Управление окружением:** python-dotenv
 
 ## Структура проекта
-my_diplom_project/
-+-- api/                      # Основное приложение бизнес-логики
-|   +-- migrations/
-|   +-- models.py             # Модели User, Shop, Product, Order, Contact
-|   +-- serializers.py        # Сериализаторы DRF (валидация ввода/вывода)
-|   +-- views.py              # ViewSet'ы и APIView (регистрация, вход)
-|   +-- urls.py               # Роутинг API
-+-- diploma_backend/          # Корневая конфигурация Django
-|   +-- settings.py           # Настройки БД, CORS, Email
-|   +-- asgi.py               # ASGI точка входа (для uvicorn)
-|   +-- wsgi.py               # WSGI точка входа
-+-- media/                    # prices.yaml
-|   +-- prices.yaml
-+-- .env.example              # Шаблон переменных окружения
-+-- .gitignore                # Исключенные файлы (venv/, pycache/)
-+-- manage.py                 # Утилита командной строки Django
-+-- requirements.txt          # Зависимости Python
-+-- run_loader.py             # Скрипт загрузки данных из YAML
-+-- README.md                 # Данный файл
+
+| Путь | Назначение |
+| :--- | :--- |
+| `api/` | Основное приложение бизнес-логики |
+| &nbsp;&nbsp;├─ `migrations/` | Миграции базы данных приложения |
+| &nbsp;&nbsp;├─ `models.py` | Модели User, Shop, Product, Order, Contact |
+| &nbsp;&nbsp;├─ `serializers.py` | Сериализаторы DRF (валидация ввода/вывода) |
+| &nbsp;&nbsp;├─ `views.py` | ViewSet'ы и APIView (регистрация, вход) |
+| &nbsp;&nbsp;└─ `urls.py` | Роутинг API |
+| `diploma_backend/` | Корневая конфигурация Django |
+| &nbsp;&nbsp;├─ `settings.py` | Настройки БД, CORS, Email |
+| &nbsp;&nbsp;├─ `asgi.py` | ASGI точка входа (для uvicorn) |
+| &nbsp;&nbsp;└─ `wsgi.py` | WSGI точка входа |
+| `media/` | Файлы медиа (например, prices.yaml) |
+| &nbsp;&nbsp;└─ `prices.yaml` | Тестовые данные для скрипта загрузки |
+| `.env.example` | Шаблон переменных окружения |
+| `.gitignore` | Исключенные файлы (`venv/`, `__pycache__/`) |
+| `manage.py` | Утилита командной строки Django |
+| `requirements.txt` | Зависимости Python |
+| `run_loader.py` | Скрипт загрузки данных из YAML |
+| `README.md` | Данный файл |
 
 
 ## Установка и запуск локально
