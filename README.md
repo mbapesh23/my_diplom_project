@@ -33,24 +33,24 @@ RESTful API сервис для управления каталогом това
 
 ## Структура проекта
 my_diplom_project/
-├── api/                      # Основное приложение бизнес-логики
-│   ├── migrations/
-│   ├── models.py             # Модели User, Shop, Product, Order, Contact
-│   ├── serializers.py        # Сериализаторы DRF (валидация ввода/вывода)
-│   ├── views.py              # ViewSet'ы и APIView (регистрация, вход)
-│   └── urls.py               # Роутинг API
-├── diploma_backend/          # Корневая конфигурация Django
-│   ├── settings.py           # Настройки БД, CORS, Email
-│   ├── asgi.py               # ASGI точка входа (для uvicorn)
-│   └── wsgi.py               # WSGI точка входа
-├── media/                    # prices.yaml
-│   └── prices.yaml
-├── .env                      # Шаблон переменных окружения
-├── .gitignore                # Исключенные файлы (venv/, pycache/)
-├── manage.py                 # Утилита командной строки Django
-├── requirements.txt          # Зависимости Python
-├── run_loader.py             # Скрипт загрузки данных из YAML
-└── README.md                 # Данный файл
++-- api/                      # Основное приложение бизнес-логики
+|   +-- migrations/
+|   +-- models.py             # Модели User, Shop, Product, Order, Contact
+|   +-- serializers.py        # Сериализаторы DRF (валидация ввода/вывода)
+|   +-- views.py              # ViewSet'ы и APIView (регистрация, вход)
+|   +-- urls.py               # Роутинг API
++-- diploma_backend/          # Корневая конфигурация Django
+|   +-- settings.py           # Настройки БД, CORS, Email
+|   +-- asgi.py               # ASGI точка входа (для uvicorn)
+|   +-- wsgi.py               # WSGI точка входа
++-- media/                    # prices.yaml
+|   +-- prices.yaml
++-- .env.example              # Шаблон переменных окружения
++-- .gitignore                # Исключенные файлы (venv/, pycache/)
++-- manage.py                 # Утилита командной строки Django
++-- requirements.txt          # Зависимости Python
++-- run_loader.py             # Скрипт загрузки данных из YAML
++-- README.md                 # Данный файл
 
 
 ## Установка и запуск локально
