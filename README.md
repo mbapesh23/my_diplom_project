@@ -167,7 +167,8 @@ goods:
 orders:
   - user: "buyer"
     status: "NEW"
+    contact: "client@example.com"
     items:
-      - product_info_id: "SKU-001"
+      - name: "Смартфон X"
         quantity: 1
         price_at_order: 50000.00

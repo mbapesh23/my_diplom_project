@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     # Сторонние приложения
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'drf_spectacular',
     
     # Наши приложения
     'api.apps.ApiConfig',
@@ -65,7 +67,7 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = []
-AUTH_USER_MODEL = 'api.User' # Ссылка на модель остается здесь
+AUTH_USER_MODEL = 'api.User'  # ссылка на кастомную модель пользователя
 
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'UTC'
@@ -86,15 +88,26 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
-EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER if EMAIL_HOST_USER else 'noreply@localhost'
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 1025))
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@example.com')
 
 CORS_ALLOWED_ORIGINS = [f"{FRONTEND_URL}"]
 CORS_ALLOW_CREDENTIALS = True
+
+# --- DRF-SPECTACULAR SETTINGS ---
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Diploma Project API - Online Store',
+    'DESCRIPTION': 'Backend API для сервиса сравнения цен интернет-магазинов. Реализованы регистрация с подтверждением Email по JWT-токенам, корзина покупок, оформление заказов и загрузка прайс-листов поставщиками.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'displayOperationId': False,
+    }
+}

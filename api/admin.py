@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import (
-    User, Shop, Category, Product, Price, Contact, 
-    Order, OrderItem, ProductInfo, Parameter, ProductParameter
+    User, Shop, Category, Product, Price, Contact,
+    Order, OrderItem, ProductInfo, Parameter, ProductParameter,
+    UserConfirmation
 )
 
 admin.site.register(User)
@@ -15,3 +16,4 @@ admin.site.register(OrderItem)
 admin.site.register(ProductInfo)
 admin.site.register(Parameter)
 admin.site.register(ProductParameter)
+admin.site.register(UserConfirmation)

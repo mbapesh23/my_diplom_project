@@ -1,0 +1,22 @@
+api\admin.py
+api\apps.py
+api\check_card.py
+api\models.py
+api\permissions.py
+api\serializers.py
+api\services\check_card_service.py
+api\upload_views.py
+api\urls.py
+api\views.py
+diploma_backend\asgi.py
+diploma_backend\settings.py
+diploma_backend\urls.py
+diploma_backend\views.py
+diploma_backend\wsgi.py
+manage.py
+README.md
+run_loader.py
+
+findstr /s /i /m "^" *.md *.py > C:\Users\User\Desktop\project_sources_dump.txt
+
+vnev\Scripts\Activate
