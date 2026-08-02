@@ -10,6 +10,3 @@ if __name__ == '__main__':
             "Не удалось импортировать Django. Проверьте установлен ли Django."
         ) from exc
     execute_from_command_line(sys.argv)
-
-# Можете проверить при помощи тест файла.
-    #  python manage.py test api.tests

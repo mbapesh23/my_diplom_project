@@ -56,16 +56,17 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = 'diploma_backend.wsgi.application'
 
-# --- БАЗА ДАННЫХ (PostgreSQL или SQLite для теста) ---
+# --- БАЗА ДАННЫХ ---
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Временно вернули SQLite для запуска без Docker
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
 AUTH_PASSWORD_VALIDATORS = []
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'api.User' # Ссылка на модель остается здесь
+
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True

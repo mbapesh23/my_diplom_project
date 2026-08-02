@@ -156,15 +156,10 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
 # --- КОРЗИНА (САМАЯ ВАЖНАЯ ЧАСТЬ) ---
 
 class CartViewSet(viewsets.GenericViewSet):
-    """
-    ViewSet для корзины. Маршруты прописаны явно в urls.py через @action.
-    Это предотвращает конфликты URL и дублирование /cart/.
-    """
     serializer_class = CartSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def _get_cart(self):
-        """Приватный метод получения черновика заказа"""
         cart, created = Order.objects.get_or_create(
             user=self.request.user,
             status='NEW',
@@ -187,11 +182,13 @@ class CartViewSet(viewsets.GenericViewSet):
         quantity = int(ser.validated_data['quantity'])
         
         try:
+            # Исправлено: берем остаток из ProductInfo.quantity
             product_info = ProductInfo.objects.select_related('shop').get(product=product_obj)
         except ProductInfo.DoesNotExist:
             return Response({"detail": "Информация о товаре не найдена"}, status=status.HTTP_404_NOT_FOUND)
 
-        if product_info.quantity_in_stock < quantity:
+        # Проверка наличия на складе
+        if product_info.quantity < quantity:
             return Response({"detail": "Недостаточно товара на складе"}, status=status.HTTP_400_BAD_REQUEST)
             
         cart = self._get_cart()
@@ -215,6 +212,53 @@ class CartViewSet(viewsets.GenericViewSet):
             cart.save(update_fields=['total_amount'])
         
         return Response(CartSerializer(cart).data)
+
+    @action(detail=False, methods=['delete'], name='Удалить позицию', url_path='remove_item')
+    def remove_item(self, request):
+        product_info_id = request.query_params.get('product_info_id')
+        
+        if not product_info_id:
+            return Response({"detail": "Укажите product_info_id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        cart = self._get_cart()
+        item = get_object_or_404(OrderItem, order=cart, product_info_id=product_info_id)
+        
+        with transaction.atomic():
+            item.delete()
+            # Пересчитываем сумму после удаления позиции
+            new_total = OrderItem.objects.filter(order=cart).aggregate(
+                total=Sum(F('price_at_order') * F('quantity'))
+            )['total'] or 0
+            cart.total_amount = new_total
+            cart.save(update_fields=['total_amount'])
+        
+        return Response(CartSerializer(cart).data)
+
+    @action(detail=False, methods=['post'], name='Подтвердить заказ', url_path='confirm')
+    def confirm(self, request):
+        contact_id = request.data.get('contact_id')
+        cart = self._get_cart()
+        
+        # Нельзя подтвердить то, что уже не является новой корзиной
+        if cart.status != 'NEW':
+            return Response({"detail": f"Заказ имеет статус {cart.status} и не может быть подтвержден как новый."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not contact_id:
+            return Response({"detail": "Укажите ID контакта"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        if cart.items.count() == 0:
+            return Response({"detail": "Корзина пуста"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        contact = get_object_or_404(Contact, id=contact_id, user=request.user)
+        
+        cart.status = 'AWAITING_PAYMENT'
+        cart.contact = contact
+        cart.save(update_fields=['status', 'contact', 'total_amount'])
+        
+        msg = f"Заказ №{cart.id} подтвержден. Сумма: {cart.total_amount} руб."
+        send_mail('Ваш заказ подтвержден', msg, settings.DEFAULT_FROM_EMAIL, [request.user.email])
+        
+        return Response({"message": "Заказ подтвержден", "order_id": cart.id, "status": cart.status})
 
     @action(detail=False, methods=['delete'], name='Удалить позицию', url_path='remove_item')
     def remove_item(self, request):

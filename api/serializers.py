@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-from .models import Shop, Category, Product, Price, Contact, OrderItem, Order
+from .models import Shop, Category, Product, Price, Contact, OrderItem, Order, UserConfirmation
+from django.db import transaction
+from django.contrib.auth.hashers import make_password
 
 UserModel = get_user_model()
 
@@ -30,7 +32,6 @@ class PriceSerializer(serializers.ModelSerializer):
         model = Price
         fields = '__all__'
 
-
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -39,7 +40,26 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
 
     def create(self, validated_data):
-        return UserModel.objects.create_user(**validated_data)
+        user = UserModel(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=make_password(validated_data['password']),
+            is_active=False 
+        )
+        
+        with transaction.atomic():
+            user.save()
+            
+            from django.utils.crypto import get_random_string
+            raw_code = get_random_string(32)
+            
+            UserConfirmation.objects.create(
+                user=user,
+                confirmation_code_hash=make_password(raw_code),
+                _raw_confirmation_code=raw_code
+            )
+            
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
@@ -96,7 +116,7 @@ class CartCreateUpdateSerializer(serializers.Serializer):
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all()) 
     quantity = serializers.IntegerField(min_value=1)
 
-
+#Сериализаторы для сброса кода
 class ConfirmEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
 

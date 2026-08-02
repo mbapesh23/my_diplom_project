@@ -1,18 +1,14 @@
-# Основные зависимости проекта (Backend)
 Django==6.0.1
 django-cors-headers==4.9.0
 djangorestframework==3.17.1
 djangorestframework-simplejwt==5.5.1
 PyYAML==6.0.3
 requests==2.31.0
-psycopg2-binary==2.9.11          # Драйвер PostgreSQL
+psycopg2-binary==2.9.11
 python-dotenv==1.2.2
-
-
-# Инструменты тестирования и разработки
 pytest==8.3.4
 pytest-django==4.11.1
 pytest-asyncio==0.24.0
-factory-boy==3.3.3                # Для создания тестовых данных вместо Mixer
-ruff==0.11.7                      # Быстрый линтера кода (замена flake8/isort)
-mypy==1.15.0                  
+factory-boy==3.3.3
+ruff==0.11.7   
+mypy==1.15.0
