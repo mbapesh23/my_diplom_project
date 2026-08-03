@@ -37,9 +37,20 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         with transaction.atomic():
-            user = UserModel.objects.create_user(**validated_data)
+            # Извлекаем пароль из валидированных данных, чтобы не передавать его напрямую в create_user
+            password = validated_data.pop('password')
+            
+            # Явно создаем НЕАКТИВНОГО пользователя. 
+            # Метод create_user по умолчанию ставит is_active=True, поэтому мы переопределяем это поведение.
+            user = UserModel.objects.create_user(is_active=False, **validated_data)
+            
+            # Устанавливаем хэш пароля (это обязательно сделать после create_user)
+            user.set_password(password)
+            user.save(update_fields=['password', 'is_active'])
+
             raw_code = validated_data.get('password')  # безопасный запасной подход
-            # Но обычно здесь создаётся настоящий код подтверждения
+            
+            # Создаем запись подтверждения
             UserConfirmation.objects.create(
                 user=user,
                 confirmation_code_hash=make_password(raw_code),

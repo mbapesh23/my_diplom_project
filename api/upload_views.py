@@ -19,7 +19,7 @@ def upload_yaml(request):
             data = json.loads(request.body.decode('utf-8'))
             
         yaml_url = data.get("url")
-        
+            
         if not yaml_url:
             return JsonResponse({"status": "error", "message": "No URL provided"}, status=400)
 

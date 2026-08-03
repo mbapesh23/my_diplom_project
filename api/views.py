@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import make_password
+from django.db.models import Sum, F
 
 # Импорт декораторов для настройки документации OpenAPI
 from drf_spectacular.utils import extend_schema
@@ -265,6 +266,9 @@ class CartViewSet(viewsets.GenericViewSet):
                     'price_at_order': product_info.price
                 }
             )
+
+            product_info.quantity -= quantity
+            product_info.save(update_fields=['quantity'])
             
             new_total = OrderItem.objects.filter(order=cart).aggregate(
                 total=Sum(F('price_at_order') * F('quantity'))
@@ -331,5 +335,10 @@ class CartViewSet(viewsets.GenericViewSet):
         
         msg = f"Заказ №{cart.id} подтвержден. Сумма: {cart.total_amount} руб."
         send_mail('Ваш заказ подтвержден', msg, settings.DEFAULT_FROM_EMAIL, [request.user.email])
+
+        serializer = self.get_serializer(cart)
         
-        return Response({"message": "Заказ подтвержден", "order_id": cart.id, "status": cart.status})
+        return Response({
+            "message": "Заказ подтвержден",
+            "data": serializer.data
+        })
